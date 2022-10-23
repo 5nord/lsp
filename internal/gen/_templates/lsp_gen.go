@@ -1,7 +1,14 @@
 package lsp
 
+{{range .TypeAliases}}
+	{{ $base := type .Type}}
+	{{ $typ := title .Name }}
+	{{with .Documentation}}{{comment .}}{{end}}
+	type {{$typ}} {{$base}}
+{{end}}
+
 {{range .Enumerations}}
-	{{ $base := print .Type.Name | type }}
+	{{ $base := type .Type }}
 	{{ $typ := title .Name }}
 	{{with .Documentation}}{{comment .}}{{end}}
 	type {{$typ}} {{$base}}

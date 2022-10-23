@@ -1,5 +1,145 @@
 package lsp
 
+// The definition of a symbol represented as one or many [locations](#Location).
+// For most programming languages there is only one location at which a symbol is
+// defined.
+//
+// Servers should prefer returning `DefinitionLink` over `Definition` if supported
+// by the client.
+type Definition int //string, []interface {}
+
+// Information about where a symbol is defined.
+//
+// Provides additional metadata over normal [location](#Location) definitions, including the range of
+// the defining symbol
+type DefinitionLink int //string, string
+
+// LSP arrays.
+// @since 3.17.0
+type LSPArray int //string, map[string]interface {}
+
+// The LSP any type.
+// Please note that strictly speaking a property with the value `undefined`
+// can't be converted into JSON preserving the property name. However for
+// convenience it is allowed and assumed that all these properties are
+// optional as well.
+// @since 3.17.0
+type LSPAny int //string, []interface {}
+
+// The declaration of a symbol representation as one or many [locations](#Location).
+type Declaration int //string, []interface {}
+
+// Information about where a symbol is declared.
+//
+// Provides additional metadata over normal [location](#Location) declarations, including the range of
+// the declaring symbol.
+//
+// Servers should prefer returning `DeclarationLink` over `Declaration` if supported
+// by the client.
+type DeclarationLink int //string, string
+
+// Inline value information can be provided by different means:
+// - directly as a text value (class InlineValueText).
+// - as a name to use for a variable lookup (class InlineValueVariableLookup)
+// - as an evaluatable expression (class InlineValueEvaluatableExpression)
+// The InlineValue types combines all inline value types into one type.
+//
+// @since 3.17.0
+type InlineValue int //string, []interface {}
+
+// The result of a document diagnostic pull request. A report can
+// either be a full report containing all diagnostics for the
+// requested document or an unchanged report indicating that nothing
+// has changed in terms of diagnostics in comparison to the last
+// pull request.
+//
+// @since 3.17.0
+type DocumentDiagnosticReport int //string, []interface {}
+
+type PrepareRenameResult int //string, []interface {}
+
+type ProgressToken int //string, []interface {}
+
+// A document selector is the combination of one or many document filters.
+//
+// @sample `let sel:DocumentSelector = [{ language: 'typescript' }, { language: 'json', pattern: '**∕tsconfig.json' }]`;
+//
+// The use of a string as a document filter is deprecated @since 3.16.0.
+type DocumentSelector int //string, map[string]interface {}
+
+// An identifier to refer to a change annotation stored with a workspace edit.
+type ChangeAnnotationIdentifier int //string, string
+
+// A workspace diagnostic document report.
+//
+// @since 3.17.0
+type WorkspaceDocumentDiagnosticReport int //string, []interface {}
+
+// An event describing a change to a text document. If only a text is provided
+// it is considered to be the full content of the document.
+type TextDocumentContentChangeEvent int //string, []interface {}
+
+// MarkedString can be used to render human readable text. It is either a markdown string
+// or a code-block that provides a language and a code snippet. The language identifier
+// is semantically equal to the optional language identifier in fenced code blocks in GitHub
+// issues. See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
+//
+// The pair of a language and a value is an equivalent to markdown:
+// ```${language}
+// ${value}
+// ```
+//
+// Note that markdown strings will be sanitized - that means html will be escaped.
+// @deprecated use MarkupContent instead.
+type MarkedString int //string, []interface {}
+
+// A document filter describes a top level text document or
+// a notebook cell document.
+//
+// @since 3.17.0 - proposed support for NotebookCellTextDocumentFilter.
+type DocumentFilter int //string, []interface {}
+
+// The glob pattern. Either a string pattern or a relative pattern.
+//
+// @since 3.17.0
+type GlobPattern int //string, []interface {}
+
+// A document filter denotes a document by different properties like
+// the [language](#TextDocument.languageId), the [scheme](#Uri.scheme) of
+// its resource, or a glob-pattern that is applied to the [path](#TextDocument.fileName).
+//
+// Glob patterns can have the following syntax:
+// - `*` to match one or more characters in a path segment
+// - `?` to match on one character in a path segment
+// - `**` to match any number of path segments, including none
+// - `{}` to group sub patterns into an OR expression. (e.g. `**​/*.{ts,js}` matches all TypeScript and JavaScript files)
+// - `[]` to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
+// - `[!...]` to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
+//
+// @sample A language filter that applies to typescript files on disk: `{ language: 'typescript', scheme: 'file' }`
+// @sample A language filter that applies to all package.json paths: `{ language: 'json', pattern: '**package.json' }`
+//
+// @since 3.17.0
+type TextDocumentFilter int //string, []interface {}
+
+// A notebook document filter denotes a notebook document by
+// different properties. The properties will be match
+// against the notebook's URI (same as with documents)
+//
+// @since 3.17.0
+type NotebookDocumentFilter int //string, []interface {}
+
+// The glob pattern to watch relative to the base path. Glob patterns can have the following syntax:
+// - `*` to match one or more characters in a path segment
+// - `?` to match on one character in a path segment
+// - `**` to match any number of path segments, including none
+// - `{}` to group conditions (e.g. `**​/*.{ts,js}` matches all TypeScript and JavaScript files)
+// - `[]` to declare a range of characters to match in a path segment (e.g., `example.[0-9]` to match on `example.0`, `example.1`, …)
+// - `[!...]` to negate a range of characters to match in a path segment (e.g., `example.[!0-9]` to match on `example.a`, `example.b`, but not `example.0`)
+//
+// @since 3.17.0
+type Pattern int //string, string
+
 // A set of predefined token types. This set is not fixed
 // an clients can specify additional token types via the
 // corresponding client capabilities.
@@ -75,7 +215,7 @@ const (
 )
 
 // Predefined error codes.
-type ErrorCodes int
+type ErrorCodes integer
 
 const (
 	ParseError     ErrorCodes = -32700
@@ -90,7 +230,7 @@ const (
 	UnknownErrorCode     ErrorCodes = -32001
 )
 
-type LSPErrorCodes int
+type LSPErrorCodes integer
 
 const (
 
@@ -140,7 +280,7 @@ const (
 )
 
 // A symbol kind.
-type SymbolKind int
+type SymbolKind uinteger
 
 const (
 	File          SymbolKind = 1
@@ -174,7 +314,7 @@ const (
 // Symbol tags are extra annotations that tweak the rendering of a symbol.
 //
 // @since 3.16
-type SymbolTag int
+type SymbolTag uinteger
 
 const (
 
@@ -226,7 +366,7 @@ const (
 // Inlay hint kinds.
 //
 // @since 3.17.0
-type InlayHintKind int
+type InlayHintKind uinteger
 
 const (
 
@@ -238,7 +378,7 @@ const (
 )
 
 // The message type
-type MessageType int
+type MessageType uinteger
 
 const (
 
@@ -257,7 +397,7 @@ const (
 
 // Defines how the host (editor) should sync
 // document changes to the language server.
-type TextDocumentSyncKind int
+type TextDocumentSyncKind uinteger
 
 const (
 
@@ -275,7 +415,7 @@ const (
 )
 
 // Represents reasons why a text document is saved.
-type TextDocumentSaveReason int
+type TextDocumentSaveReason uinteger
 
 const (
 
@@ -291,7 +431,7 @@ const (
 )
 
 // The kind of a completion entry.
-type CompletionItemKind int
+type CompletionItemKind uinteger
 
 const (
 	Text          CompletionItemKind = 1
@@ -325,7 +465,7 @@ const (
 // item.
 //
 // @since 3.15.0
-type CompletionItemTag int
+type CompletionItemTag uinteger
 
 const (
 
@@ -335,7 +475,7 @@ const (
 
 // Defines whether the insert text in a completion item should be interpreted as
 // plain text or a snippet.
-type InsertTextFormat int
+type InsertTextFormat uinteger
 
 const (
 
@@ -357,7 +497,7 @@ const (
 // item insertion.
 //
 // @since 3.16.0
-type InsertTextMode int
+type InsertTextMode uinteger
 
 const (
 
@@ -379,7 +519,7 @@ const (
 )
 
 // A document highlight kind.
-type DocumentHighlightKind int
+type DocumentHighlightKind uinteger
 
 const (
 
@@ -512,7 +652,7 @@ const (
 )
 
 // The file event type
-type FileChangeType int
+type FileChangeType uinteger
 
 const (
 
@@ -526,7 +666,7 @@ const (
 	Deleted FileChangeType = 3
 )
 
-type WatchKind int
+type WatchKind uinteger
 
 const (
 
@@ -541,7 +681,7 @@ const (
 )
 
 // The diagnostic's severity.
-type DiagnosticSeverity int
+type DiagnosticSeverity uinteger
 
 const (
 
@@ -561,7 +701,7 @@ const (
 // The diagnostic tags.
 //
 // @since 3.15.0
-type DiagnosticTag int
+type DiagnosticTag uinteger
 
 const (
 
@@ -578,7 +718,7 @@ const (
 )
 
 // How a completion was triggered
-type CompletionTriggerKind int
+type CompletionTriggerKind uinteger
 
 const (
 
@@ -597,7 +737,7 @@ const (
 // How a signature help was triggered.
 //
 // @since 3.15.0
-type SignatureHelpTriggerKind int
+type SignatureHelpTriggerKind uinteger
 
 const (
 
@@ -614,7 +754,7 @@ const (
 // The reason why code actions were requested.
 //
 // @since 3.17.0
-type CodeActionTriggerKind int
+type CodeActionTriggerKind uinteger
 
 const (
 
@@ -646,7 +786,7 @@ const (
 // A notebook cell kind.
 //
 // @since 3.17.0
-type NotebookCellKind int
+type NotebookCellKind uinteger
 
 const (
 
@@ -693,7 +833,7 @@ const (
 	Undo FailureHandlingKind = "undo"
 )
 
-type PrepareSupportDefaultBehavior int
+type PrepareSupportDefaultBehavior uinteger
 
 const (
 

@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"go/format"
 	"io/ioutil"
 	"log"
@@ -36,12 +37,26 @@ func main() {
 
 	for _, file := range files {
 		t, err := template.New(file).Funcs(template.FuncMap{
-			"type": func(t string) string {
-				switch t {
-				case "uinteger", "integer":
-					return "int"
+			"type": func(v interface{}) string {
+				switch v := v.(type) {
+				case EnumerationType:
+					return string(v.Name)
+				case map[string]interface{}:
+					var ret []string
+					for _, val := range v {
+						ret = append(ret, fmt.Sprintf("%T", val))
+					}
+
+					return fmt.Sprintf("int //%s\n", strings.Join(ret, ", "))
+				//case string:
+				//	switch v {
+				//	case "uinteger", "integer":
+				//		return "int"
+				//	default:
+				//		return fmt.Sprintf("%q", v)
+				//	}
 				default:
-					return t
+					return fmt.Sprintf("%T", v)
 				}
 			},
 			"title": strings.Title,
